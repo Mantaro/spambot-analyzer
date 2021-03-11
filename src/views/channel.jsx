@@ -64,9 +64,23 @@ export default class Channel extends React.Component {
 
         return (
             <div>
-                {messages.map(m=>
-                    <Message {...m}
-                             key={m.id}
+                <Button onClick={()=>{
+                    const selected = new Set(this.state.includedMessages);
+                    const included = [];
+                    for(const m of messages) {
+                        if(!selected.has(m.id) && !m.author.bot) {
+                            included.push(m.id);
+                        }
+                    }
+                    this.setState({ includedMessages: included });
+                }}>
+                    Toggle selection
+                </Button>
+                {messages.map(m=>{
+                    const selected = this.state.includedMessages.includes(m.id);
+                    return (
+                        <Message {...m}
+                             key={m.id + (selected ? "-selected" : "")}
                              suspicious={!m.author.bot && suspiciousMessageIds.includes(m.id)}
                              include={(id, include) => {
                                  this.setState({
@@ -75,8 +89,10 @@ export default class Channel extends React.Component {
                                             this.state.includedMessages.filter(i => i !== id)
                                  });
                              }}
-                    />
-                )}
+                             selected={selected}
+                        />
+                    )
+                })}
                 <Button floating fab='vertical' icon='send' className='red' fabClickOnly large style={{bottom: '45px', right: '24px'}}>
                     <Modal trigger={<Button floating icon='notes' className='green'/>}>
                         <pre>

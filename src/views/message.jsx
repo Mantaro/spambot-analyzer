@@ -15,7 +15,8 @@ export default class Message extends React.PureComponent {
         content: PropTypes.string.isRequired,
         raw: PropTypes.string.isRequired,
         suspicious: PropTypes.bool,
-        include: PropTypes.func
+        include: PropTypes.func,
+        selected: PropTypes.bool
     };
 
     render() {
@@ -27,6 +28,7 @@ export default class Message extends React.PureComponent {
                         className='filled-in'
                         label="include?"
                         disabled={this.props.author.bot}
+                        checked={this.props.selected}
                         onChange={(_, value) => this.props.include(this.props.id, value)}
                     />
                     {this.props.suspicious && <Icon style={{verticalAlign: "middle", display: "inline", color: "red"}}>error_outline</Icon>}
